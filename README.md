@@ -1,6 +1,4 @@
-# chat-samples
-This repository contains samples illustrating how to interact with Twitch Chat.
+# twitch-IRC-bots
+This repository contains simple Twitch Chat (IRC) bots in Python3 based on twitchdev/chat-samples.
 
-1. [Javascript](https://github.com/TwitchDev/chat-samples/tree/master/javascript) - a simple chatbot written in Javascript using WebSockets to demonstrate how to interact with chat on Twitch.
-2. [Python](https://github.com/TwitchDev/chat-samples/tree/master/python) - a simple chatbot written in Python using IRC to demonstrate how to interact with chat on Twitch.
-3. [Java](https://github.com/TwitchDev/chat-samples/tree/master/java) - a simple chatbot written in Java using IRC to demonstrate how to interact with chat on Twitch.
+1. [Python](https://github.com/derekmhh/twitch-IRC-bots/tree/master/python) - a simple chatbot written in Python3 using IRC to demonstrate how to interact with chat on Twitch.
