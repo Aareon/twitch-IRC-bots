@@ -49,10 +49,10 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # Poll the API to get current game.
         if cmd == "game":
             headers = {'Client-ID': self.client_id}
-            stream_url = 'https://api.twitch.tv/helix/streams/?user_login=' + self.channel_id[1:]
+            stream_url = 'https://api.twitch.tv/helix/streams/?user_login=' + self.channel[1:]
             stream_r = requests.get(stream_url, headers=headers).json()
             if stream_r['data']:
-                user_url = 'https://api.twitch.tv/helix/users/?login=' + self.channel_id[1:]
+                user_url = 'https://api.twitch.tv/helix/users/?login=' + self.channel[1:]
                 user_r = requests.get(user_url, header=headers).json()
                 game_url = 'https://api.twitch.tv/helix/games/?id=' + stream_r['data'][0]['game_id']
                 game_r = requests.get(game_url, header=headers).json()
@@ -61,10 +61,10 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # Poll the API the get the current status of the stream
         elif cmd == "title":
             headers = {'Client-ID': self.client_id}
-            stream_url = 'https://api.twitch.tv/helix/streams/?user_login=' + self.channel_id[1:]
+            stream_url = 'https://api.twitch.tv/helix/streams/?user_login=' + self.channel[1:]
             stream_r = requests.get(stream_url, headers=headers).json()
             if stream_r['data']:
-                user_url = 'https://api.twitch.tv/helix/users/?login=' + self.channel_id[1:]
+                user_url = 'https://api.twitch.tv/helix/users/?login=' + self.channel[1:]
                 user_r = requests.get(user_url, header=headers).json()
                 c.privmsg(self.channel, user_r['data'][0]['display_name'] + ' channel title is currently ' + stream_r['data'][0]['title'])
 
