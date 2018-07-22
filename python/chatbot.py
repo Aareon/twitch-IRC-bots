@@ -12,6 +12,7 @@ import sys
 import irc.bot
 import requests
 
+
 class TwitchBot(irc.bot.SingleServerIRCBot):
     def __init__(self, username, client_id, token, channel):
         self.client_id = client_id
@@ -21,9 +22,8 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
         port = 6667
-        print('Connecting to ' + server + ' on port ' + str(port) + '...')
+        print('Connecting to {} on port {}...'.format(server, port))
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port, 'oauth:'+token)], username, username)
-        
 
     def on_welcome(self, c, e):
         print('Joining ' + self.channel)
@@ -37,7 +37,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
     def on_pubmsg(self, c, e):
 
         # If a chat message starts with an exclamation point, try to run it as a command
-        if e.arguments[0][:1] == '!':
+        if e.arguments[0].startswith('!'):
             cmd = e.arguments[0].split(' ')[0][1:]
             print('Received command: ' + cmd)
             self.do_command(e, cmd)
@@ -56,7 +56,8 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                 user_r = requests.get(user_url, header=headers).json()
                 game_url = 'https://api.twitch.tv/helix/games/?id=' + stream_r['data'][0]['game_id']
                 game_r = requests.get(game_url, header=headers).json()
-                c.privmsg(self.channel, user_r['data'][0]['display_name'] + ' is currently playing ' + game_r['data'][0]['name'])
+                c.privmsg(self.channel, '{} is currently playing {}'.format(
+                    user_r['data'][0]['display_name'], game_r['data'][0]['name']))
 
         # Poll the API the get the current status of the stream
         elif cmd == "title":
@@ -66,12 +67,14 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             if stream_r['data']:
                 user_url = 'https://api.twitch.tv/helix/users/?login=' + self.channel_id[1:]
                 user_r = requests.get(user_url, header=headers).json()
-                c.privmsg(self.channel, user_r['data'][0]['display_name'] + ' channel title is currently ' + stream_r['data'][0]['title'])
+                c.privmsg(self.channel, '{} channel title is currently {}'.format(
+                    user_r['data'][0]['display_name'], stream_r['data'][0]['title']))
 
         # Provide basic information to viewers for specific commands
         elif cmd == "raffle":
             message = "This is an example bot, replace this text with your raffle text."
             c.privmsg(self.channel, message)
+
         elif cmd == "schedule":
             message = "This is an example bot, replace this text with your schedule text."            
             c.privmsg(self.channel, message)
@@ -80,18 +83,16 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         else:
             c.privmsg(self.channel, "Did not understand command: " + cmd)
 
-def main():
+
+if __name__ == "__main__":
     if len(sys.argv) != 5:
         print("Usage: twitchbot <username> <client id> <token> <channel>")
         sys.exit(1)
 
-    username  = sys.argv[1]
+    username = sys.argv[1]
     client_id = sys.argv[2]
-    token     = sys.argv[3]
-    channel   = sys.argv[4]
+    token = sys.argv[3]
+    channel = sys.argv[4]
 
     bot = TwitchBot(username, client_id, token, channel)
     bot.start()
-
-if __name__ == "__main__":
-    main()
